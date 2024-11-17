@@ -5,9 +5,9 @@ const AdaptationsGame = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showAnimation, setShowAnimation] = useState(false);
   const [gameComplete, setGameComplete] = useState(false);
-  const [dragging, setDragging] = useState(null);
+  const [dragging, setDragging] = useState<number | null>(null);
 
-  const gameStyles = {
+  const gameStyles: Record<string, React.CSSProperties> = {
     container: {
       minHeight: '100vh',
       padding: '2rem',
@@ -45,10 +45,7 @@ const AdaptationsGame = () => {
       flexDirection: 'row',
       gap: '2rem',
       justifyContent: 'space-between',
-      alignItems: 'flex-start',
-      '@media (max-width: 768px)': {
-        flexDirection: 'column'
-      }
+      alignItems: 'flex-start'
     }
   };
 
@@ -110,16 +107,16 @@ const AdaptationsGame = () => {
     }
   ];
 
-  const handleDragStart = (e, index) => {
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     setDragging(index);
     e.dataTransfer.setData('text/plain', '');
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (dragging === questions[currentQuestion].correct) {
       setShowAnimation(true);
@@ -145,7 +142,7 @@ const AdaptationsGame = () => {
 
   const celebrationEmojis = ['🎉', '🎈', '🎊', '✨', '💫', '🌟', '⭐', '🎯'];
 
-  const questionBoxStyle = {
+  const questionBoxStyle: React.CSSProperties = {
     width: '48%',
     padding: '1.5rem',
     borderRadius: '15px',
@@ -156,7 +153,7 @@ const AdaptationsGame = () => {
     border: '4px solid white'
   };
 
-  const dropZoneStyle = {
+  const dropZoneStyle: React.CSSProperties = {
     height: '160px',
     border: '4px dashed #a855f7',
     borderRadius: '15px',
@@ -169,7 +166,7 @@ const AdaptationsGame = () => {
     transition: 'all 0.3s ease'
   };
 
-  const answerStyle = (index) => ({
+  const answerStyle = (index: number) => ({
     padding: '1.25rem',
     borderRadius: '15px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
@@ -189,7 +186,7 @@ const AdaptationsGame = () => {
     }
   });
 
-  const completeScreenStyle = {
+  const completeScreenStyle: React.CSSProperties = {
     textAlign: 'center',
     padding: '2rem',
     background: 'linear-gradient(to right, #fce7f3, #f3e8ff, #e0f2fe)',
@@ -198,7 +195,7 @@ const AdaptationsGame = () => {
     border: '4px solid white'
   };
 
-  const buttonStyle = {
+  const buttonStyle: React.CSSProperties = {
     background: 'linear-gradient(to right, #ec4899, #8b5cf6, #6366f1)',
     color: 'white',
     padding: '1rem 2rem',
@@ -207,11 +204,7 @@ const AdaptationsGame = () => {
     border: '4px solid white',
     cursor: 'pointer',
     transform: 'translateY(0)',
-    transition: 'all 0.2s ease',
-    ':hover': {
-      transform: 'translateY(-4px)',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-    }
+    transition: 'all 0.2s ease'
   };
 
   return (
