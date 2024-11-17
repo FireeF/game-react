@@ -1,283 +1,325 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    maxWidth: "800px",
-    margin: "0 auto",
-    padding: "24px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    background: "linear-gradient(to right, #e8f0ff, #f0e6ff)",
-    fontFamily: "Arial, sans-serif",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "24px",
-  },
-  questionCount: {
-    fontSize: "18px",
-    fontWeight: "bold",
-    color: "#5b21b6",
-  },
-  score: {
-    fontSize: "18px",
-    fontWeight: "bold",
-    color: "#059669",
-  },
-  questionContainer: {
-    marginBottom: "24px",
-  },
-  questionHeader: {
-    display: "flex",
-    alignItems: "center",
-    gap: "16px",
-    marginBottom: "20px",
-  },
-  icon: {
-    fontSize: "32px",
-  },
-  question: {
-    fontSize: "20px",
-    fontWeight: "bold",
-    color: "#1f2937",
-  },
-  optionsGrid: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-  },
-  optionButton: {
-    padding: "16px",
-    textAlign: "left",
-    borderRadius: "8px",
-    border: "2px solid #e5e7eb",
-    backgroundColor: "white",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-    fontSize: "16px",
-  },
-  animation: {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    fontSize: "64px",
-    animation: "ping 1s cubic-bezier(0, 0, 0.2, 1)",
-  },
-  resultsContainer: {
-    textAlign: "center",
-  },
-  resultsTitle: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    color: "#5b21b6",
-    marginBottom: "16px",
-  },
-  resultsScore: {
-    fontSize: "20px",
-    marginBottom: "24px",
-  },
-  perfectScore: {
-    fontSize: "48px",
-    animation: "spin 2s linear infinite",
-  },
-  resetButton: {
-    padding: "12px 24px",
-    backgroundColor: "#5b21b6",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontSize: "16px",
-    transition: "background-color 0.2s ease",
-  },
-};
-
-// Add hover effects
-const hoverStyles = {
-  optionButton: {
-    ":hover": {
-      borderColor: "#a78bfa",
-      transform: "scale(1.02)",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    },
-  },
-  resetButton: {
-    ":hover": {
-      backgroundColor: "#7c3aed",
-    },
-  },
-};
-
-// Add keyframe animations
-const keyframes = `
-  @keyframes ping {
-    75%, 100% {
-      transform: translate(-50%, -50%) scale(2);
-      opacity: 0;
-    }
-  }
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-`;
-
-const QuizGame = () => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+const AdaptationsGame = () => {
   const [score, setScore] = useState(0);
-  const [showScore, setShowScore] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showAnimation, setShowAnimation] = useState(false);
+  const [gameComplete, setGameComplete] = useState(false);
+  const [dragging, setDragging] = useState(null);
 
-  // Add styles to head
-  React.useEffect(() => {
-    const styleSheet = document.createElement("style");
-    styleSheet.innerText = keyframes;
-    document.head.appendChild(styleSheet);
-    return () => styleSheet.remove();
-  }, []);
+  const gameStyles = {
+    container: {
+      minHeight: '100vh',
+      padding: '2rem',
+      background: 'linear-gradient(to bottom right, #ffebf5, #f3e8ff, #e8f0ff)',
+      fontFamily: 'Comic Sans MS, cursive'
+    },
+    gameBox: {
+      maxWidth: '1000px',
+      margin: '0 auto',
+      background: 'rgba(255, 255, 255, 0.9)',
+      borderRadius: '20px',
+      padding: '2rem',
+      border: '4px solid #d8b4fe',
+      boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+    },
+    title: {
+      fontSize: '3rem',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginBottom: '2rem',
+      background: 'linear-gradient(to right, #ec4899, #8b5cf6, #6366f1)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      animation: 'pulse 2s infinite'
+    },
+    scoreBoard: {
+      fontSize: '1.5rem',
+      textAlign: 'center',
+      marginBottom: '1.5rem',
+      color: '#6b21a8',
+      fontWeight: 'bold'
+    },
+    questionContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      gap: '2rem',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      '@media (max-width: 768px)': {
+        flexDirection: 'column'
+      }
+    }
+  };
 
   const questions = [
     {
-      question: "Где се најчешће изводе експерименти?",
-      options: ["У природи", "У лабораторијама", "У учионици", "У парку"],
-      correct: 1,
-      icon: "🧪",
+      term: "Environment",
+      definitions: [
+        "The living and nonliving things in a place",
+        "An area with specific climate",
+        "A body part or behavior aiding survival"
+      ],
+      correct: 0,
+      background: 'linear-gradient(to right, #86efac, #6ee7b7, #5eead4)',
+      emoji: "🌍 🌿 🦋 🌸"
     },
     {
-      question: "Шта научници користе да би проучавали природу?",
-      options: [
-        "Само посматрање",
-        "Само експерименте",
-        "Различите методе и поступке",
-        "Само цртање",
+      term: "Biome",
+      definitions: [
+        "A body part that helps animals survive",
+        "An area with specific climate, plants, and animals",
+        "The process of moving to warmer areas"
+      ],
+      correct: 1,
+      background: 'linear-gradient(to right, #93c5fd, #7dd3fc, #818cf8)',
+      emoji: "🌊 🏝️ 🌴 🐠"
+    },
+    {
+      term: "Adaptation",
+      definitions: [
+        "The weather in a specific area",
+        "The type of soil in an environment",
+        "A body part or behavior aiding survival"
       ],
       correct: 2,
-      icon: "🔬",
+      background: 'linear-gradient(to right, #d8b4fe, #f0abfc, #f9a8d4)',
+      emoji: "🦁 🐘 🦒 🦮"
     },
     {
-      question: "Да ли су све лабораторије исто опремљене?",
-      options: [
-        "Да, све су исте",
-        "Не, различито су опремљене",
-        "Зависи од дана",
-        "Нема разлике",
+      term: "Desert Biome",
+      definitions: [
+        "Has many tall trees",
+        "Is hot and dry",
+        "Has lots of rainfall"
       ],
       correct: 1,
-      icon: "⚗️",
+      background: 'linear-gradient(to right, #fde047, #fcd34d, #fdba74)',
+      emoji: "🏜️ 🌵 🦂 🐪"
     },
     {
-      question: "Шта може да се нађе у лабораторијама?",
-      options: [
-        "Само хемикалије",
-        "Само животиње",
-        "Само биљке",
-        "Апарати, хемикалије и жива бића",
+      term: "Plant Needs",
+      definitions: [
+        "Only sunlight and water",
+        "Just carbon dioxide",
+        "Water, light, carbon dioxide, and nutrients"
       ],
-      correct: 3,
-      icon: "🧫",
-    },
+      correct: 2,
+      background: 'linear-gradient(to right, #a3e635, #86efac, #6ee7b7)',
+      emoji: "🌱 🌺 🌳 🍀"
+    }
   ];
 
-  const handleAnswer = (selectedAnswer: number) => {
-    const isCorrect = selectedAnswer === questions[currentQuestion].correct;
+  const handleDragStart = (e, index) => {
+    setDragging(index);
+    e.dataTransfer.setData('text/plain', '');
+  };
 
-    if (isCorrect) {
-      setScore(score + 1);
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    if (dragging === questions[currentQuestion].correct) {
       setShowAnimation(true);
+      setScore(score + 1);
+      setTimeout(() => {
+        setShowAnimation(false);
+        if (currentQuestion < questions.length - 1) {
+          setCurrentQuestion(currentQuestion + 1);
+        } else {
+          setGameComplete(true);
+        }
+      }, 1000);
     }
-
-    setTimeout(() => {
-      setShowAnimation(false);
-      if (currentQuestion + 1 < questions.length) {
-        setCurrentQuestion(currentQuestion + 1);
-      } else {
-        setShowScore(true);
-      }
-    }, 1000);
+    setDragging(null);
   };
 
-  const resetQuiz = () => {
-    setCurrentQuestion(0);
+  const restart = () => {
     setScore(0);
-    setShowScore(false);
+    setCurrentQuestion(0);
+    setGameComplete(false);
+    setShowAnimation(false);
   };
 
-  if (showScore) {
-    return (
-      <div style={styles.container}>
-        <div style={styles.resultsContainer}>
-          <h2 style={styles.resultsTitle}>Квиз је завршен! 🎉</h2>
-          <p style={styles.resultsScore}>
-            Освојили сте {score} од {questions.length} бодова!
-          </p>
-          {score === questions.length && (
-            <div>
-              <span style={styles.perfectScore}>⭐</span>
-            </div>
-          )}
-          <button
-            style={{ ...styles.resetButton }}
-            onMouseOver={(e: React.MouseEvent<HTMLButtonElement>) =>
-              Object.assign(e.currentTarget.style, hoverStyles.resetButton[":hover"])
-            }
-            onClick={resetQuiz}
-          >
-            Играј поново
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const celebrationEmojis = ['🎉', '🎈', '🎊', '✨', '💫', '🌟', '⭐', '🎯'];
+
+  const questionBoxStyle = {
+    width: '48%',
+    padding: '1.5rem',
+    borderRadius: '15px',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+    background: questions[currentQuestion].background,
+    transform: 'scale(1)',
+    transition: 'transform 0.3s ease',
+    border: '4px solid white'
+  };
+
+  const dropZoneStyle = {
+    height: '160px',
+    border: '4px dashed #a855f7',
+    borderRadius: '15px',
+    background: 'rgba(255, 255, 255, 0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '1.25rem',
+    color: '#4b5563',
+    transition: 'all 0.3s ease'
+  };
+
+  const answerStyle = (index) => ({
+    padding: '1.25rem',
+    borderRadius: '15px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+    cursor: 'move',
+    background: 'white',
+    opacity: dragging === index ? '0.5' : '1',
+    transform: 'translateY(0)',
+    transition: 'all 0.2s ease',
+    border: '4px solid transparent',
+    marginBottom: '1rem',
+    fontSize: '1.125rem',
+    fontWeight: 'bold',
+    ':hover': {
+      transform: 'translateY(-4px)',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+      borderColor: '#a855f7'
+    }
+  });
+
+  const completeScreenStyle = {
+    textAlign: 'center',
+    padding: '2rem',
+    background: 'linear-gradient(to right, #fce7f3, #f3e8ff, #e0f2fe)',
+    borderRadius: '20px',
+    boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+    border: '4px solid white'
+  };
+
+  const buttonStyle = {
+    background: 'linear-gradient(to right, #ec4899, #8b5cf6, #6366f1)',
+    color: 'white',
+    padding: '1rem 2rem',
+    borderRadius: '9999px',
+    fontSize: '1.5rem',
+    border: '4px solid white',
+    cursor: 'pointer',
+    transform: 'translateY(0)',
+    transition: 'all 0.2s ease',
+    ':hover': {
+      transform: 'translateY(-4px)',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+    }
+  };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <span style={styles.questionCount}>
-          Питање {currentQuestion + 1}/{questions.length}
-        </span>
-        <span style={styles.score}>Бодови: {score}</span>
-      </div>
-
-      <div style={styles.questionContainer}>
-        <div style={styles.questionHeader}>
-          <span style={styles.icon}>{questions[currentQuestion].icon}</span>
-          <h2 style={styles.question}>{questions[currentQuestion].question}</h2>
-        </div>
-
-        <div style={styles.optionsGrid}>
-          {questions[currentQuestion].options.map((option, index) => (
+    <div style={gameStyles.container}>
+      <div style={gameStyles.gameBox}>
+        <h1 style={gameStyles.title}>
+          🎮 Awesome Adaptations Game! 🎮
+        </h1>
+      
+        {!gameComplete ? (
+          <div>
+            <div style={gameStyles.scoreBoard}>
+              Score: {score} / {questions.length} {celebrationEmojis[score]}
+            </div>
+          
+            <div style={gameStyles.questionContainer}>
+              <div style={questionBoxStyle}>
+                <div style={{fontSize: '2rem', marginBottom: '1rem', animation: 'bounce 1s infinite'}}>
+                  {questions[currentQuestion].emoji}
+                </div>
+                <h2 style={{fontSize: '1.875rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937'}}>
+                  {questions[currentQuestion].term}
+                </h2>
+                <div 
+                  style={dropZoneStyle}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                >
+                  🎯 Drop Your Answer Here! 🎯
+                </div>
+              </div>
+            
+              <div style={{width: '48%'}}>
+                {questions[currentQuestion].definitions.map((definition, index) => (
+                  <div
+                    key={index}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, index)}
+                    style={answerStyle(index)}
+                  >
+                    {definition}
+                  </div>
+                ))}
+              </div>
+            </div>
+          
+            {showAnimation && (
+              <div style={{
+                position: 'fixed',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(0,0,0,0.5)',
+                zIndex: 50
+              }}>
+                <div style={{textAlign: 'center'}}>
+                  <div style={{fontSize: '5rem', animation: 'bounce 1s infinite', marginBottom: '1rem'}}>
+                    {celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)]}
+                  </div>
+                  <div style={{fontSize: '3rem', animation: 'pulse 1s infinite', color: 'white', fontWeight: 'bold'}}>
+                    Amazing! You got it right! 
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div style={completeScreenStyle}>
+            <h2 style={{fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#7c3aed'}}>
+              🎉 Woohoo! Game Complete! 🎉
+            </h2>
+            <p style={{fontSize: '1.875rem', marginBottom: '1.5rem', color: '#4b5563'}}>
+              Your awesome score: {score} / {questions.length}
+            </p>
+            {score === questions.length ? (
+              <div style={{fontSize: '3rem', marginBottom: '1.5rem', animation: 'bounce 1s infinite'}}>
+                🏆 Perfect Score! You're a STAR! 🌟
+              </div>
+            ) : (
+              <p style={{marginBottom: '1.5rem', fontSize: '1.5rem', color: '#4b5563'}}>
+                So close! Try again to become a champion! 🌟
+              </p>
+            )}
             <button
-              key={index}
-              style={{ ...styles.optionButton }}
-              onMouseOver={(e: React.MouseEvent<HTMLButtonElement>) =>
-                Object.assign(
-                  e.currentTarget.style,
-                  hoverStyles.optionButton[":hover"]
-                )
-              }
-              onMouseOut={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.currentTarget.style.borderColor = "#e5e7eb";
-                e.currentTarget.style.transform = "none";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-              onClick={() => handleAnswer(index)}
+              onClick={restart}
+              style={buttonStyle}
             >
-              {option}
+              🎮 Play Again! 🎮
             </button>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
 
-      {showAnimation && <div style={styles.animation}>⭐</div>}
+      <style>
+        {`
+          @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+          }
+        `}
+      </style>
     </div>
   );
 };
 
-export default QuizGame;
+export default AdaptationsGame;
