@@ -12,7 +12,8 @@ const AdaptationsGame = () => {
       minHeight: '100vh',
       padding: '2rem',
       background: 'linear-gradient(to bottom right, #ffebf5, #f3e8ff, #e8f0ff)',
-      fontFamily: 'Comic Sans MS, cursive'
+      fontFamily: 'Comic Sans MS, cursive',
+      overflow: 'hidden'
     },
     gameBox: {
       maxWidth: '1000px',
@@ -301,6 +302,30 @@ const AdaptationsGame = () => {
 
       <style>
         {`
+          html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+          }
+
+          /* Hide scrollbar for all browsers */
+          ::-webkit-scrollbar {
+            display: none;
+          }
+          
+          * {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+          }
+
+          @media (max-width: 768px) {
+            .questionContainer {
+              flex-direction: column !important;
+            }
+          }
           @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
