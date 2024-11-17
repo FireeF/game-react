@@ -11,7 +11,7 @@ const AdaptationsGame = () => {
     container: {
       minHeight: '100vh',
       padding: '2rem',
-      background: 'linear-gradient(to bottom right, #ffebf5, #f3e8ff, #e8f0ff)',
+      background: '#d5d4e7',
       fontFamily: 'Comic Sans MS, cursive',
       overflow: 'hidden'
     },
